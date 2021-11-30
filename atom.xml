@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-11-28T12:42:23.505Z</updated>
+  <updated>2021-11-30T09:59:25.955Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>GMM</title>
+    <link href="http://example.com/2021/11/30/GMM/"/>
+    <id>http://example.com/2021/11/30/GMM/</id>
+    <published>2021-11-30T01:29:59.000Z</published>
+    <updated>2021-11-30T09:59:25.955Z</updated>
+    
+    <content type="html"><![CDATA[<h1>Generalized Method of Moments(GMM)</h1><p>OLS估计量成立的重要条件：解释变量与扰动项不相关，即$E(\epsilon_t X_t) \neq 0$（前定变量的假设）。</p><p>否则，OLS估计量将不一致，OLS估计量不会收敛到真实的总体参数。</p><h2 id="1-内生性来源">1. <strong>内生性来源</strong></h2><h3 id="1-1-与滞后因变量的自相关">1.1 <strong>与滞后因变量的自相关</strong></h3><p>例如，利率模型给定：</p><p>$$y_t = \beta_1 + \beta_2 x_t +\beta_3 y_{t-1} + \epsilon_t$$</p><p>假设$\epsilon_t $ 服从一阶自相关，即：</p><p>$$\epsilon_t = \rho \epsilon_{t-1} + v_t$$</p><p>则这个模型就可以写成：</p><p>$$y_t = \beta_1 + \beta_2 x_t + \beta_3 y_{t-1} + \rho \epsilon_{t-1} + v_t$$</p><p>原公式左右两边同时滞后一期：</p><p>$$y_{t-1} = \beta_1 + \beta_2 x_{t-1} + \beta_3 y_{t-2} + \epsilon_{t-1}$$</p><p>可以看到误差项$\epsilon_t$与 $y_{t-1}$ 相关，OLS估计量不再是一致估计量，而是有偏的。</p><h3 id="1-2-度量误差-（measurement-error）">1.2 <strong>度量误差</strong> （measurement error）</h3><ul><li>由于关键变量的度量上存在误差，使其与真实值之间存在偏差，这种偏差可能会成为回归误差（regression error）的一部分，从而导致内生性问题。</li></ul><p>假设因变量为$y_t $，自变量为 $w_t $:</p><p>$$y_t = \beta_1 + \beta_2 w_t + v_t$$</p><p>$$x_t = w_t + u_t$$</p><p>$$y_t = \beta_1 + \beta_2 x_t + \epsilon_t$$</p><p>where $\epsilon_t = v_t -\beta_2 u_t$</p><p>此时参数$\beta_2$ 的估计量是有偏的、不一致的。</p><h3 id="1-3-遗漏变量">1.3 <strong>遗漏变量</strong></h3><p>如果遗漏的变量与其他解释变量不相关，一般不会造成问题。否则，就会造成解释变量与残差项相关，从而引起内生性问题。</p><p>考虑个人工资的等式：</p><p>$$y_i = x_{1i} ^{\prime} \beta_1 + x_{2i} \beta_2 + u_i \gamma + v_i $$</p><p>$y_i$代表个人工资取log，$x_{1i}$代表个人特征的向量（包括一个截距项），$x_{2i}$代表上学年限。$u_i$代表不可观测的变量，反映一个人的能力。</p><p>因为$u_i$是不可观测的，所以计量经济学者会简单进行估计：</p><p>$$y_i = x_i ^{\prime} \beta + \epsilon_i$$</p><p>where $\epsilon_i = u_i \gamma + v_i$</p><p>这就将遗失变量的影响归结到误差项中，$\epsilon_i$与受教育程度存在相关性，导致内生性问题。</p><h4 id="1-4-联立方程偏差">1.4 <strong>联立方程偏差</strong></h4><p>考虑以下联立方程模型：</p><p>(i) $c_t (消费) = b y_t (收入) + u_t, 0 \leq \beta(边际消费倾向) \leq 1$</p><p>(ii) $y_t = c_t + i_t$ (收入 = 消费 + 投资)</p><p>由于$u_t \rightarrow c_t \rightarrow y_t (ii式) \rightarrow y_t (i式)$，</p><p>此时产生了联立方程偏差，$^{b}$ 是有偏的，因为$E(y_tu_t) \neq 0$, 不能用OLS估计。</p><p>OLS方法在联立方程是有偏不一致的，这是由于内生性导致的，即使是大样本也不能解决。</p><h2 id="2-工具变量法">2. <strong>工具变量法</strong></h2><p>由于$E(X_i,u_i) \neq 0 \rightarrow$ 内生性，所以OLS为有偏估计。工具变量（IV）即找到$x_i$的替代品就是工具变量**（和$x_i$相关，但跟误差项$u_i$无关）**</p><h3 id="2-1-IV的推导——方程性质">2.1 <strong>IV的推导——方程性质</strong></h3><p>在此联立方程中：</p><p>(i) $c_t  = b y_t  + u_t, 0 \leq \beta \leq 1$</p><p>(ii) $y_t = c_t + i_t$ (收入 = 消费 + 投资)</p><p>所有变量可以分为内生变量和前定变量。内生变量为解出来的两个解：$c_t, y_t$,前定变量可分为外生变量（$i_t$）和内生变量滞后项（在此联立方程中没有）。</p><p>若$E(y_t u_t) = 0, E(y_t(c_t - b y_t)) = 0$</p><p>$$\hat{b} = (y ^{\prime} y)^{-1} y{\prime} c= \frac{\sum{c_t y_t}}{\sum{y_t ^2}}$$</p><p>将$i_t$作为式(i)中的工具变量,即$E(i_t u_t) = 0, E(i_t(c_t - b y_t)) = 0$,则</p><p>$$\tilde{b} =(i ^{\prime} y) i^{\prime} c = \frac{\sum{i_t c_t}}{\sum i_t y_t} $$</p><p>$\tilde{b}$就是$b$的估计量，且</p><p>$$p lim \quad \tilde{b} - b = 0$$</p><blockquote><p>假设式中只有一部分被替代成为工具变量的情况：</p></blockquote><p>考虑以下模型：</p><p>$$y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + u_i$$</p><p>在此模型中，$x_{1i}$无内生性，$x_{2i}$有内生性，即$E(X_{1i} u_i) =  0, E(X_{2i} u_i) \neq  0 $</p><p>令$z_{2i}$为工具变量，$E(Z_{2i} u_i) = 0$</p><p>可以建立以下方程：</p><p>$$<br>y=\begin{cases}<br>\frac{1}{N} \sum [x_{1i}(y_i - \beta_1 x_{1i}- \beta_1 x_{2i})] = 0\\<br>\frac{1}{N} \sum [z_{2i}(y_i - \beta_1 x_{1i}- \beta_1 x_{2i})] = 0<br>\end{cases}<br>$$</p><p>$\Rightarrow \tilde{b} = (z^{\prime}x)^{-1} z^{\prime} y$</p><p>Ps: 工具变量$Z$由两部分组成，$Z = [X_{1i},z_{2i}]$，维度大于解释变量维度。</p><h3 id="2-2-IV的推导——矩阵性质">2.2 <strong>IV的推导——矩阵性质</strong></h3><p>给定模型：</p><p>$$y = Xb + u$$</p><p>两边同乘$X^{\prime}$,得到</p><p>$$X^{\prime} y = X^{\prime} Xb + X^{\prime} u$$</p><p>如果plim$(\frac{1}{n} X^{\prime} u) \neq 0$,那么$b$的估计量就是不一致的。</p><p>考虑一个(n×k)维的工具变量矩阵z，满足<strong>3个假定：</strong></p><ul><li>① p lim$(\frac{1}{n} Z^{\prime} u) = 0$</li><li>② p lim$(\frac{1}{n} Z^{\prime} X) = \sum$</li><li>③ p lim$(\frac{1}{n} Z^{\prime} Z) = \sum^*$</li></ul><p>($\sum 和 \sum^* $存在且为非奇异的，即保证逆矩阵的存在)</p><p>在方程 $y = Xb + u$ 两边同乘 $Z^{\prime}$,则有：</p><p>$$Z^{\prime} y = Z^{\prime} Xb + Z^{\prime} u$$</p><p>如果p lim$(\frac{1}{n} Z^{\prime} u) = 0$，那么</p><p>$$\hat{b}^{IV} = (Z^{\prime} X)^{-1} Z^{\prime} y$$</p><p>就是在工具变量估计下的b值。</p><p>工具变量估计的b值是一致的：</p><p>$$\hat{b}^{IV} = (Z^{\prime} X)^{-1} Z^{\prime} (Xb + u)$$<br>$$p lim(\hat{b}^{IV}) = b$$</p><h2 id="3-两阶段最小二乘法">3. <strong>两阶段最小二乘法</strong></h2><p>（<strong>全部变量都有内生性</strong>）$E(X_t \epsilon_t) \neq 0$</p><p>(i) $y_t  = \beta_0 + \beta_1 X_t  + \epsilon_t$</p><p>(ii) $X_t = y_t + i_t$</p><p>$X_k$即$X_t$,$Z$代表原模型中所有的前定变量。</p><p>$X_k = Z \pi_k + v_k$</p><p>$\hat{\pi}_k = {(Z^{\prime} Z)^{-1}Z^{\prime}X}$</p><p>$\hat{X} = Z \hat{\pi}_k = Z {(Z^{\prime} Z)^{-1}Z^{\prime}X}$</p><p>把$\hat{X}$代入原方程再进行第二次估计，得到</p><p>$\hat{\beta}_{IV} = (\hat{X}^{\prime} \hat{X})^{-1} \hat{X}^{\prime} y$</p><p>(<strong>多一个外生变量的结果</strong>*——影响简化方程的估计结果)</p><p>$\hat{\beta}_{IV} = (X^{\prime} Z(Z^{\prime}Z)^{-1}Z^{\prime} X)^{-1}X^{\prime}Z(Z^{\prime} Z)^{-1}y$</p><h2 id="4-GMM证明">4.GMM证明</h2>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1&gt;Generalized Method of Moments(GMM)&lt;/h1&gt;
+&lt;p&gt;OLS估计量成立的重要条件：解释变量与扰动项不相关，即$E(\epsilon_t X_t) \neq 0$（前定变量的假设）。&lt;/p&gt;
+&lt;p&gt;否则，OLS估计量将不一致，OLS估计量不会</summary>
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Literature - Credit Scoring</title>

@@ -1,0 +1,332 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GMM | Secrets of Strawberry</title><meta name="author" content="Karen"><meta name="copyright" content="Karen"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Generalized Method of Moments(GMM) OLS估计量成立的重要条件：解释变量与扰动项不相关，即$E(\epsilon_t X_t) \neq 0$（前定变量的假设）。 否则，OLS估计量将不一致，OLS估计量不会收敛到真实的总体参数。 1. 内生性来源 1.1 与滞后因变量的自相关 例如，利率模型给定： $$y_t &#x3D; \beta_1 + \beta_2 x_t +\">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GMM">
+<meta property="og:url" content="http://example.com/2021/11/30/GMM/index.html">
+<meta property="og:site_name" content="Secrets of Strawberry">
+<meta property="og:description" content="Generalized Method of Moments(GMM) OLS估计量成立的重要条件：解释变量与扰动项不相关，即$E(\epsilon_t X_t) \neq 0$（前定变量的假设）。 否则，OLS估计量将不一致，OLS估计量不会收敛到真实的总体参数。 1. 内生性来源 1.1 与滞后因变量的自相关 例如，利率模型给定： $$y_t &#x3D; \beta_1 + \beta_2 x_t +\">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg">
+<meta property="article:published_time" content="2021-11-30T01:29:59.000Z">
+<meta property="article:modified_time" content="2021-11-30T09:59:25.955Z">
+<meta property="article:author" content="Karen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg"><link rel="shortcut icon" href="/img/favicon-32x32.png"><link rel="canonical" href="http://example.com/2021/11/30/GMM/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-11-30 17:59:25'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Secrets of Strawberry" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/11/27/GSQY5q38XnbvcO1.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a></div></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Secrets of Strawberry</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">GMM</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-30T01:29:59.000Z" title="发表于 2021-11-30 09:29:59">2021-11-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-11-30T09:59:25.955Z" title="更新于 2021-11-30 17:59:25">2021-11-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1>Generalized Method of Moments(GMM)</h1>
+<p>OLS估计量成立的重要条件：解释变量与扰动项不相关，即$E(\epsilon_t X_t) \neq 0$（前定变量的假设）。</p>
+<p>否则，OLS估计量将不一致，OLS估计量不会收敛到真实的总体参数。</p>
+<h2 id="1-内生性来源">1. <strong>内生性来源</strong></h2>
+<h3 id="1-1-与滞后因变量的自相关">1.1 <strong>与滞后因变量的自相关</strong></h3>
+<p>例如，利率模型给定：</p>
+<p>$$y_t = \beta_1 + \beta_2 x_t +\beta_3 y_{t-1} + \epsilon_t$$</p>
+<p>假设$\epsilon_t $ 服从一阶自相关，即：</p>
+<p>$$\epsilon_t = \rho \epsilon_{t-1} + v_t$$</p>
+<p>则这个模型就可以写成：</p>
+<p>$$y_t = \beta_1 + \beta_2 x_t + \beta_3 y_{t-1} + \rho \epsilon_{t-1} + v_t$$</p>
+<p>原公式左右两边同时滞后一期：</p>
+<p>$$y_{t-1} = \beta_1 + \beta_2 x_{t-1} + \beta_3 y_{t-2} + \epsilon_{t-1}$$</p>
+<p>可以看到误差项$\epsilon_t$与 $y_{t-1}$ 相关，OLS估计量不再是一致估计量，而是有偏的。</p>
+<h3 id="1-2-度量误差-（measurement-error）">1.2 <strong>度量误差</strong> （measurement error）</h3>
+<ul>
+<li>由于关键变量的度量上存在误差，使其与真实值之间存在偏差，这种偏差可能会成为回归误差（regression error）的一部分，从而导致内生性问题。</li>
+</ul>
+<p>假设因变量为$y_t $，自变量为 $w_t $:</p>
+<p>$$y_t = \beta_1 + \beta_2 w_t + v_t$$</p>
+<p>$$x_t = w_t + u_t$$</p>
+<p>$$y_t = \beta_1 + \beta_2 x_t + \epsilon_t$$</p>
+<p>where $\epsilon_t = v_t -\beta_2 u_t$</p>
+<p>此时参数$\beta_2$ 的估计量是有偏的、不一致的。</p>
+<h3 id="1-3-遗漏变量">1.3 <strong>遗漏变量</strong></h3>
+<p>如果遗漏的变量与其他解释变量不相关，一般不会造成问题。否则，就会造成解释变量与残差项相关，从而引起内生性问题。</p>
+<p>考虑个人工资的等式：</p>
+<p>$$y_i = x_{1i} ^{\prime} \beta_1 + x_{2i} \beta_2 + u_i \gamma + v_i $$</p>
+<p>$y_i$代表个人工资取log，$x_{1i}$代表个人特征的向量（包括一个截距项），$x_{2i}$代表上学年限。$u_i$代表不可观测的变量，反映一个人的能力。</p>
+<p>因为$u_i$是不可观测的，所以计量经济学者会简单进行估计：</p>
+<p>$$y_i = x_i ^{\prime} \beta + \epsilon_i$$</p>
+<p>where $\epsilon_i = u_i \gamma + v_i$</p>
+<p>这就将遗失变量的影响归结到误差项中，$\epsilon_i$与受教育程度存在相关性，导致内生性问题。</p>
+<h4 id="1-4-联立方程偏差">1.4 <strong>联立方程偏差</strong></h4>
+<p>考虑以下联立方程模型：</p>
+<p>(i) $c_t (消费) = b y_t (收入) + u_t, 0 \leq \beta(边际消费倾向) \leq 1$</p>
+<p>(ii) $y_t = c_t + i_t$ (收入 = 消费 + 投资)</p>
+<p>由于$u_t \rightarrow c_t \rightarrow y_t (ii式) \rightarrow y_t (i式)$，</p>
+<p>此时产生了联立方程偏差，$^{b}$ 是有偏的，因为$E(y_tu_t) \neq 0$, 不能用OLS估计。</p>
+<p>OLS方法在联立方程是有偏不一致的，这是由于内生性导致的，即使是大样本也不能解决。</p>
+<h2 id="2-工具变量法">2. <strong>工具变量法</strong></h2>
+<p>由于$E(X_i,u_i) \neq 0 \rightarrow$ 内生性，所以OLS为有偏估计。工具变量（IV）即找到$x_i$的替代品就是工具变量**（和$x_i$相关，但跟误差项$u_i$无关）**</p>
+<h3 id="2-1-IV的推导——方程性质">2.1 <strong>IV的推导——方程性质</strong></h3>
+<p>在此联立方程中：</p>
+<p>(i) $c_t  = b y_t  + u_t, 0 \leq \beta \leq 1$</p>
+<p>(ii) $y_t = c_t + i_t$ (收入 = 消费 + 投资)</p>
+<p>所有变量可以分为内生变量和前定变量。内生变量为解出来的两个解：$c_t, y_t$,前定变量可分为外生变量（$i_t$）和内生变量滞后项（在此联立方程中没有）。</p>
+<p>若$E(y_t u_t) = 0, E(y_t(c_t - b y_t)) = 0$</p>
+<p>$$\hat{b} = (y ^{\prime} y)^{-1} y{\prime} c= \frac{\sum{c_t y_t}}{\sum{y_t ^2}}$$</p>
+<p>将$i_t$作为式(i)中的工具变量,即$E(i_t u_t) = 0, E(i_t(c_t - b y_t)) = 0$,则</p>
+<p>$$\tilde{b} =(i ^{\prime} y) i^{\prime} c = \frac{\sum{i_t c_t}}{\sum i_t y_t} $$</p>
+<p>$\tilde{b}$就是$b$的估计量，且</p>
+<p>$$p lim \quad \tilde{b} - b = 0$$</p>
+<blockquote>
+<p>假设式中只有一部分被替代成为工具变量的情况：</p>
+</blockquote>
+<p>考虑以下模型：</p>
+<p>$$y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + u_i$$</p>
+<p>在此模型中，$x_{1i}$无内生性，$x_{2i}$有内生性，即$E(X_{1i} u_i) =  0, E(X_{2i} u_i) \neq  0 $</p>
+<p>令$z_{2i}$为工具变量，$E(Z_{2i} u_i) = 0$</p>
+<p>可以建立以下方程：</p>
+<p>$$<br>
+y=\begin{cases}<br>
+\frac{1}{N} \sum [x_{1i}(y_i - \beta_1 x_{1i}- \beta_1 x_{2i})] = 0\\<br>
+\frac{1}{N} \sum [z_{2i}(y_i - \beta_1 x_{1i}- \beta_1 x_{2i})] = 0<br>
+\end{cases}<br>
+$$</p>
+<p>$\Rightarrow \tilde{b} = (z^{\prime}x)^{-1} z^{\prime} y$</p>
+<p>Ps: 工具变量$Z$由两部分组成，$Z = [X_{1i},z_{2i}]$，维度大于解释变量维度。</p>
+<h3 id="2-2-IV的推导——矩阵性质">2.2 <strong>IV的推导——矩阵性质</strong></h3>
+<p>给定模型：</p>
+<p>$$y = Xb + u$$</p>
+<p>两边同乘$X^{\prime}$,得到</p>
+<p>$$X^{\prime} y = X^{\prime} Xb + X^{\prime} u$$</p>
+<p>如果plim$(\frac{1}{n} X^{\prime} u) \neq 0$,那么$b$的估计量就是不一致的。</p>
+<p>考虑一个(n×k)维的工具变量矩阵z，满足<strong>3个假定：</strong></p>
+<ul>
+<li>① p lim$(\frac{1}{n} Z^{\prime} u) = 0$</li>
+<li>② p lim$(\frac{1}{n} Z^{\prime} X) = \sum$</li>
+<li>③ p lim$(\frac{1}{n} Z^{\prime} Z) = \sum^*$</li>
+</ul>
+<p>($\sum 和 \sum^* $存在且为非奇异的，即保证逆矩阵的存在)</p>
+<p>在方程 $y = Xb + u$ 两边同乘 $Z^{\prime}$,则有：</p>
+<p>$$Z^{\prime} y = Z^{\prime} Xb + Z^{\prime} u$$</p>
+<p>如果p lim$(\frac{1}{n} Z^{\prime} u) = 0$，那么</p>
+<p>$$\hat{b}^{IV} = (Z^{\prime} X)^{-1} Z^{\prime} y$$</p>
+<p>就是在工具变量估计下的b值。</p>
+<p>工具变量估计的b值是一致的：</p>
+<p>$$\hat{b}^{IV} = (Z^{\prime} X)^{-1} Z^{\prime} (Xb + u)$$<br>
+$$p lim(\hat{b}^{IV}) = b$$</p>
+<h2 id="3-两阶段最小二乘法">3. <strong>两阶段最小二乘法</strong></h2>
+<p>（<strong>全部变量都有内生性</strong>）$E(X_t \epsilon_t) \neq 0$</p>
+<p>(i) $y_t  = \beta_0 + \beta_1 X_t  + \epsilon_t$</p>
+<p>(ii) $X_t = y_t + i_t$</p>
+<p>$X_k$即$X_t$,$Z$代表原模型中所有的前定变量。</p>
+<p>$X_k = Z \pi_k + v_k$</p>
+<p>$\hat{\pi}_k = {(Z^{\prime} Z)^{-1}Z^{\prime}X}$</p>
+<p>$\hat{X} = Z \hat{\pi}_k = Z {(Z^{\prime} Z)^{-1}Z^{\prime}X}$</p>
+<p>把$\hat{X}$代入原方程再进行第二次估计，得到</p>
+<p>$\hat{\beta}_{IV} = (\hat{X}^{\prime} \hat{X})^{-1} \hat{X}^{\prime} y$</p>
+<p>(<strong>多一个外生变量的结果</strong>*——影响简化方程的估计结果)</p>
+<p>$\hat{\beta}_{IV} = (X^{\prime} Z(Z^{\prime}Z)^{-1}Z^{\prime} X)^{-1}X^{\prime}Z(Z^{\prime} Z)^{-1}y$</p>
+<h2 id="4-GMM证明">4.GMM证明</h2>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Karen</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/11/30/GMM/">http://example.com/2021/11/30/GMM/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Secrets of Strawberry</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/11/27/djtWR9BxeGfk87b.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/11/27/djtWR9BxeGfk87b.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/11/28/Litrature-Credit-Scoring/"><img class="next-cover" src="https://i.epochtimes.com/assets/uploads/2020/02/bdb60cfb965b665250cf60afd3dde7ad-600x400.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Literature - Credit Scoring</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://i.loli.net/2021/11/27/GSQY5q38XnbvcO1.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Karen</div><div class="author-info__description">Star...</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Karen-ying"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">即使前方永夜，也要走下去，因为即使是微弱的星光也会照亮征途。<img src="http://file.qqtouxiang.com/pic/gx/2019-07-22/c98153aa120c3540f7eafab7f4f1c5b6.gif"></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">Generalized Method of Moments(GMM)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%86%85%E7%94%9F%E6%80%A7%E6%9D%A5%E6%BA%90"><span class="toc-number">1.1.</span> <span class="toc-text">1. 内生性来源</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%B8%8E%E6%BB%9E%E5%90%8E%E5%9B%A0%E5%8F%98%E9%87%8F%E7%9A%84%E8%87%AA%E7%9B%B8%E5%85%B3"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 与滞后因变量的自相关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%BA%A6%E9%87%8F%E8%AF%AF%E5%B7%AE-%EF%BC%88measurement-error%EF%BC%89"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 度量误差 （measurement error）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E9%81%97%E6%BC%8F%E5%8F%98%E9%87%8F"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3 遗漏变量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-%E8%81%94%E7%AB%8B%E6%96%B9%E7%A8%8B%E5%81%8F%E5%B7%AE"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">1.4 联立方程偏差</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%B7%A5%E5%85%B7%E5%8F%98%E9%87%8F%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">2. 工具变量法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-IV%E7%9A%84%E6%8E%A8%E5%AF%BC%E2%80%94%E2%80%94%E6%96%B9%E7%A8%8B%E6%80%A7%E8%B4%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 IV的推导——方程性质</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-IV%E7%9A%84%E6%8E%A8%E5%AF%BC%E2%80%94%E2%80%94%E7%9F%A9%E9%98%B5%E6%80%A7%E8%B4%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 IV的推导——矩阵性质</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">3. 两阶段最小二乘法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-GMM%E8%AF%81%E6%98%8E"><span class="toc-number">1.4.</span> <span class="toc-text">4.GMM证明</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/11/30/GMM/" title="GMM"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GMM"/></a><div class="content"><a class="title" href="/2021/11/30/GMM/" title="GMM">GMM</a><time datetime="2021-11-30T01:29:59.000Z" title="发表于 2021-11-30 09:29:59">2021-11-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/11/28/Litrature-Credit-Scoring/" title="Literature - Credit Scoring"><img src="https://i.epochtimes.com/assets/uploads/2020/02/bdb60cfb965b665250cf60afd3dde7ad-600x400.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Literature - Credit Scoring"/></a><div class="content"><a class="title" href="/2021/11/28/Litrature-Credit-Scoring/" title="Literature - Credit Scoring">Literature - Credit Scoring</a><time datetime="2021-11-28T09:41:46.000Z" title="发表于 2021-11-28 17:41:46">2021-11-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/04/18/%E6%9C%9F%E5%BE%85/" title="期待"><img src="https://w.wallhaven.cc/full/j3/wallhaven-j3dgmy.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="期待"/></a><div class="content"><a class="title" href="/2021/04/18/%E6%9C%9F%E5%BE%85/" title="期待">期待</a><time datetime="2021-04-18T15:53:32.000Z" title="发表于 2021-04-18 23:53:32">2021-04-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/04/04/%E4%BB%8A%E7%94%9F%E6%98%AF%E7%AC%AC%E4%B8%80%E6%AC%A1/" title="今生是第一次"><img src="https://w.wallhaven.cc/full/72/wallhaven-72lvqe.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="今生是第一次"/></a><div class="content"><a class="title" href="/2021/04/04/%E4%BB%8A%E7%94%9F%E6%98%AF%E7%AC%AC%E4%B8%80%E6%AC%A1/" title="今生是第一次">今生是第一次</a><time datetime="2021-04-04T08:34:51.000Z" title="发表于 2021-04-04 16:34:51">2021-04-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/02/18/%E6%97%A5%E5%B8%B8%E5%BF%83%E6%83%85%E3%80%901%E3%80%91/" title="日常心情【1】"><img src="https://w.wallhaven.cc/full/57/wallhaven-573239.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="日常心情【1】"/></a><div class="content"><a class="title" href="/2021/02/18/%E6%97%A5%E5%B8%B8%E5%BF%83%E6%83%85%E3%80%901%E3%80%91/" title="日常心情【1】">日常心情【1】</a><time datetime="2021-02-18T12:45:49.000Z" title="发表于 2021-02-18 20:45:49">2021-02-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Karen</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function loadValine () {
+  function initValine () {
+    let initData = {
+      el: '#vcomment',
+      appId: 'Ioe5gkzcAs84EoNQ62BCvO8u-gzGzoHsz',
+      appKey: 'nlRo4dGAyaz1o7IYbqylFbly',
+      placeholder: 'Please leave your footprints',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'en',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: true,
+      path: window.location.pathname,
+    }
+
+    if (true) { 
+      initData.requiredFields= ('nick,mail'.split(','))
+    }
+    
+    if (false) {
+      const otherData = false
+      initData = Object.assign(initData, otherData)
+    }
+    
+    const valine = new Valine(initData)
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
